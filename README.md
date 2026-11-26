@@ -97,4 +97,7 @@ La carpeta `resultados/` contendrá:
 
 La semilla predeterminada es fija (`2026`), por lo que el experimento es
 reproducible.
+
+# Ejemplo 2:
+
 # ObligatorioModelosFormales
