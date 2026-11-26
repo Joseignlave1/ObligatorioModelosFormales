@@ -1,4 +1,6 @@
-# Simulación Monte Carlo de estrategias Quant
+# Ejemplo 1:
+
+## Simulación Monte Carlo de estrategias Quant
 
 Este proyecto compara tres estrategias de compra e intercambio de divisas en
 los mismos escenarios de mercado. La ejecución predeterminada genera
