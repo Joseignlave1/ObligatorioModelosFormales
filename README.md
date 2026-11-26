@@ -100,4 +100,78 @@ reproducible.
 
 # Ejemplo 2:
 
-# ObligatorioModelosFormales
+## Data Center (Caché de Netflix en Antel, Pando)
+
+Este proyecto compara distintas políticas de actualización de la caché de
+Netflix (Open Connect Appliance, OCA) instalada en el data center de Antel en
+Pando. Se estima cuánto cuesta por día el tráfico que no se sirve desde la
+caché y debe salir por el enlace de tránsito internacional. La ejecución
+predeterminada realiza **500 corridas de 28 días** para cada intervalo de
+actualización y presenta el costo diario esperado de cada política.
+
+## Modelo utilizado
+
+El enunciado describe el problema de forma cualitativa, pero no fija
+distribuciones ni valores numéricos. Para poder simularlo se adoptaron
+supuestos explícitos y configurables:
+
+- El catálogo tiene 7.000 títulos. El tamaño en disco de cada título, con
+  todas sus codificaciones, es uniforme entre 5 y 60 GB.
+- La probabilidad de que un pedido corresponda a un título sigue una
+  distribución de tipo Zipf con exponente 0,8.
+- La cantidad de reproducciones diarias de cada título sigue una distribución
+  de Poisson. La tasa total es de 200.000 reproducciones por día y se
+  multiplica por 1,3 los fines de semana.
+- Cada día el 2 % del catálogo intercambia su popularidad con otro título
+  elegido al azar, lo que representa estrenos y cambios de interés.
+- La capacidad del OCA es de 120 TB. En cada actualización la caché guarda los
+  títulos más populares que entran en esa capacidad.
+- Cada GB que no está en la caché sale por tránsito internacional en hora pico
+  y cuesta 0,010 USD. Cada GB de relleno viaja en hora valle y cuesta
+  0,002 USD, porque el tránsito se factura por percentil 95.
+- La capacidad y los costos unitarios son parámetros deterministas.
+- Todas las políticas se evalúan con la misma semilla, de modo que la
+  comparación sea justa.
+
+Las políticas se modelan de la siguiente forma:
+
+1. **Relleno diario (T = 1):** la caché se actualiza todos los días, como hace
+   Netflix en la práctica.
+2. **Rellenos intermedios (T = 2 y T = 3):** la caché se actualiza cada dos o
+   tres días.
+3. **Relleno semanal (T = 7):** la caché se actualiza una vez por semana.
+4. **Relleno quincenal (T = 14):** la caché se actualiza cada dos semanas.
+
+Cada corrida simula 28 días y registra el costo diario medio y la tasa de
+acierto de la caché.
+
+## Instalación
+
+Se recomienda usar un entorno virtual:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install numpy matplotlib
+```
+
+## Ejecución
+
+```bash
+python ejemplo2_data_center.py
+```
+
+Los parámetros del modelo (`N`, `ALPHA`, `CAP_TB`, `LAM`, `PICO`, `CHURN`,
+`C_MISS`, `C_FILL`, `DIAS`, `RUNS` y `Ts`) se modifican al comienzo del archivo.
+
+## Resultados
+
+El script imprime una línea por cada intervalo de actualización y genera un
+archivo:
+
+- Salida en consola: costo diario medio con percentiles 5 y 95, y tasa de
+  acierto de la caché (hit ratio) para cada `T`.
+- `ejemplo2_resultados.png`: costo diario medio por política y distribución del
+  costo para `T = 1`, `T = 7` y `T = 14`.
+
+La semilla es fija (`42`), por lo que el experimento es reproducible.
