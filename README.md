@@ -1,4 +1,6 @@
-# Simulación Monte Carlo de estrategias Quant
+# Ejemplo 1:
+
+## Mercado Cambiario(Quant) 
 
 Este proyecto compara tres estrategias de compra e intercambio de divisas en
 los mismos escenarios de mercado. La ejecución predeterminada genera
@@ -95,4 +97,7 @@ La carpeta `resultados/` contendrá:
 
 La semilla predeterminada es fija (`2026`), por lo que el experimento es
 reproducible.
+
+# Ejemplo 2:
+
 # ObligatorioModelosFormales
